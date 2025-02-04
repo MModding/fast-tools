@@ -26,8 +26,9 @@ def process_directory(path: str, old: str, new: str):
                 if element.name.split(".")[-1] in SUPPORTED_EXTENSIONS:
                     with open(element.path, "r", encoding = "locale") as file:
                         content = file.read()
-                    with open(element.path, "w", encoding = "locale") as file:
-                        file.write(remap(content, old, new))
+                    if content != remap(content, old, new):
+                        with open(element.path, "w", encoding = "locale") as file:
+                            file.write(remap(content, old, new))
             else:
                 process_directory(element.path, old, new)
             os.rename(
