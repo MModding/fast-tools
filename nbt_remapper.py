@@ -54,3 +54,5 @@ if __name__ == '__main__':
     file = nbtlib.load(path)
     process_compound(file, current_name, remap_name)
     file.save()
+
+    input("Done!\n")
