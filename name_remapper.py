@@ -19,20 +19,23 @@ def remap(string: str, old: str, new: str) -> str:
 
 
 def process_directory(path: str, old: str, new: str):
-    elements = os.scandir(path)
-    for element in elements:
-        if element.is_file():
-            if element.name.split(".")[-1] in SUPPORTED_EXTENSIONS:
-                with open(element.path, "r", encoding = "locale") as file:
-                    content = file.read()
-                with open(element.path, "w", encoding = "locale") as file:
-                    file.write(remap(content, old, new))
-        else:
-            process_directory(element.path, old, new)
-        os.rename(
-            element.path,
-            element.path[:len(element.path) - len(element.name)] + remap(element.name, old, new),
-        )
+    try:
+        elements = os.scandir(path)
+        for element in elements:
+            if element.is_file():
+                if element.name.split(".")[-1] in SUPPORTED_EXTENSIONS:
+                    with open(element.path, "r", encoding = "locale") as file:
+                        content = file.read()
+                    with open(element.path, "w", encoding = "locale") as file:
+                        file.write(remap(content, old, new))
+            else:
+                process_directory(element.path, old, new)
+            os.rename(
+                element.path,
+                element.path[:len(element.path) - len(element.name)] + remap(element.name, old, new),
+            )
+    except OSError as err:
+        print(err)
 
 
 if __name__ == '__main__':
